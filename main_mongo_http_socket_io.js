@@ -32,7 +32,7 @@
   });
 
   for (i = 0; i < 100000; i += 1) {
-    socket.emit('log', { test: 'test' });
+    socket.emit('log', [{ test: 'test' }]);
   }
 
   endRequests = new Date();
