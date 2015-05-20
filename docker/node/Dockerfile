@@ -1,0 +1,1 @@
+FROM bmichalski/node:0.12
