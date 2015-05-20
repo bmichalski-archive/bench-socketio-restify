@@ -1,28 +1,60 @@
-var begin = new Date();
+/*jslint nomen: true, indent: 2 */
+/*global require, console */
 
-var restify = require('restify');
+(function () {
+  'use strict';
 
-var client = restify.createJsonClient({
-  url: 'http://localhost:8080',
-  version: '~1.0'
-});
+  var begin,
+    restify,
+    client,
+    successCount,
+    i,
+    endRequests;
 
-var successCount = 0;
+  begin = new Date();
 
-for (i = 0; i < 100000; i += 1) {
-    client.post('/log', [{ test: 'test' }], function (err, req, res, obj) {
-        if (JSON.parse(res.body).status === 'success') {
-            successCount += 1;
-        }
+  restify = require('restify');
 
-        if (successCount === 100000) {
-            var endSuccesses = new Date();
+  client = restify.createJsonClient({
+    url: 'http://localhost:8080',
+    version: '~1.0'
+  });
 
-            console.log('endSuccesses', endSuccesses.getTime() - begin.getTime());
-        }
-    });
-}
+  successCount = 0;
 
-var endRequests = new Date();
+  function then(
+    err,
+    req,
+    res,
+    obj
+  ) {
+    if (JSON.parse(res.body).status === 'success') {
+      successCount += 1;
+    }
 
-console.log('endRequests', endRequests.getTime() - begin.getTime());
+    if (successCount === 100000) {
+      var endSuccesses;
+
+      endSuccesses = new Date();
+
+      console.log('endSuccesses', endSuccesses.getTime() - begin.getTime());
+    }
+  }
+
+  for (i = 0; i < 100000; i += 1) {
+    client.post(
+      '/log',
+      [
+        { test: 'test' }
+      ],
+      then
+    );
+  }
+
+  endRequests = new Date();
+
+  console.log(
+    'endRequests',
+    endRequests.getTime() - begin.getTime()
+  );
+}());

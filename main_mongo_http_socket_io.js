@@ -1,23 +1,44 @@
-var begin = new Date();
+/*jslint nomen: true, indent: 2 */
+/*global require, console */
 
-var socket = require('socket.io-client')('http://localhost:3000');
+(function () {
+  'use strict';
 
-var countSuccesses = 0;
+  var begin,
+    socket,
+    countSuccesses,
+    i,
+    endRequests;
 
-socket.on('logSuccess', function () {
+  begin = new Date();
+
+  socket = require('socket.io-client')('http://localhost:3000');
+
+  countSuccesses = 0;
+
+  socket.on('logSuccess', function () {
+    var endSuccesses;
+
     countSuccesses += 1;
 
     if (countSuccesses === 100000) {
-        var endSuccesses = new Date();
+      endSuccesses = new Date();
 
-        console.log('endSuccesses', endSuccesses.getTime() - begin.getTime());
+      console.log(
+        'endSuccesses',
+        endSuccesses.getTime() - begin.getTime()
+      );
     }
-});
+  });
 
-for (i = 0; i < 100000; i += 1) {
+  for (i = 0; i < 100000; i += 1) {
     socket.emit('log', { test: 'test' });
-}
+  }
 
-var endRequests = new Date();
+  endRequests = new Date();
 
-console.log('endRequests', endRequests.getTime() - begin.getTime());
+  console.log(
+    'endRequests',
+    endRequests.getTime() - begin.getTime()
+  );
+}());
