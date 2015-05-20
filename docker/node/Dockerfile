@@ -1,1 +1,1 @@
-FROM bmichalski/node:0.12
+FROM bmichalski/docker-node:0.12
